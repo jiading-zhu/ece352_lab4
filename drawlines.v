@@ -81,6 +81,10 @@ module drawlines(
 
 	/* Line algorithm FSM */
 	
+	LDA system_lda (x_0, x_1, y_0, y_1, CLOCK_50, line_go, line_done);
+	
+	
+	
 	/* User interface */
 	
 	ui system_ui (CLOCK_50, resetN, XorY_store, go, line_done,
@@ -88,6 +92,7 @@ module drawlines(
 	
 
 	/* Circuit outputs. */
+	
 	
 endmodule
 		
