@@ -1,10 +1,12 @@
-module LDA(input1,input2,input3,input4,clk,colour,start,done);
+module LDA(input1,input2,input3,input4,clk,colour,start,done,to_VGA_plot,to_VGA_x,to_VGA_y);
 	input [8:0] input1, input3;
 	input [7:0] input2, input4;
 	input clk;
 	input colour;
 	input start;
-	output done;
+	output done, to_VGA_plot;
+	output [8:0] to_VGA_x;
+	output [7:0] to_VGA_y;
 	
 	reg [8:0] X0, X1, x, x_plot;
 	reg [7:0] Y0, Y1;
@@ -75,20 +77,14 @@ module LDA(input1,input2,input3,input4,clk,colour,start,done);
 					next_st = G;
 			
 			F:	begin
-					VGA.x=y;
-					VGA.y=x;
 					next_st = H;
 				end
 				
 			G:	begin
-					VGA.x=x;
-					VGA.y=y;
 					next_st = H;
 				end
 			
 			H:	begin
-				VGA.color = colour;
-				VGA.plot = 1;
 				error <= error + deltay;
 				if (error>0)
 					next_st = I;
@@ -97,14 +93,12 @@ module LDA(input1,input2,input3,input4,clk,colour,start,done);
 			end
 			
 			I:	begin
-				VGA.plot = 0;
 				y <= y + ystep;
 				error <= error - deltax;
 				next_st = J;
 			end
 			
 			J: begin
-				VGA.plot = 0;
 				x <= x+1;
 				next_st = C;
 			end
@@ -120,5 +114,8 @@ module LDA(input1,input2,input3,input4,clk,colour,start,done);
 			cur_st <=next_st;
 			
 	assign done = (cur_st == D);
+	assign to_VGA_x = (cur_st == F)?(y):(x);
+	assign to_VGA_y = (cur_st == F)?(x):(y);
+	assign to_VGA_plot = ((cur_st == F)|(cur_st == G))?1:0;
 		
 endmodule
