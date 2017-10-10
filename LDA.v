@@ -118,6 +118,8 @@ module LDA(input1,input2,input3,input4,clk,colour,start,done);
 			cur_st <=A;
 		else
 			cur_st <=next_st;
+			
+	assign done = (cur_st == D);
 		
 endmodule
 	
