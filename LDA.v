@@ -1,6 +1,3 @@
-module plot(input x, input y);
-endmodule
-
 module LDA(input1,input2,input3,input4,clk,colour,start,done);
 	input [8:0] input1, input3;
 	input [7:0] input2, input4;
@@ -78,19 +75,20 @@ module LDA(input1,input2,input3,input4,clk,colour,start,done);
 					next_st = G;
 			
 			F:	begin
-					x_plot<=y;
-					y_plot<=x;
+					VGA.x=y;
+					VGA.y=x;
 					next_st = H;
 				end
 				
 			G:	begin
-					x_plot<=x;
-					y_plot<=y;
+					VGA.x=x;
+					VGA.y=y;
 					next_st = H;
 				end
 			
 			H:	begin
-				//plot my_plot(x_plot,y_plot);
+				VGA.color = colour;
+				VGA.plot = 1;
 				error <= error + deltay;
 				if (error>0)
 					next_st = I;
@@ -99,12 +97,14 @@ module LDA(input1,input2,input3,input4,clk,colour,start,done);
 			end
 			
 			I:	begin
+				VGA.plot = 0;
 				y <= y + ystep;
 				error <= error - deltax;
 				next_st = J;
 			end
 			
 			J: begin
+				VGA.plot = 0;
 				x <= x+1;
 				next_st = C;
 			end
@@ -122,5 +122,3 @@ module LDA(input1,input2,input3,input4,clk,colour,start,done);
 	assign done = (cur_st == D);
 		
 endmodule
-	
-	
